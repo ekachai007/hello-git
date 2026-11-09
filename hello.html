@@ -1,178 +1,692 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World | Animated Landing Page</title>
+  <title>Hello World | Neon Arcade</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      background: #080b1a;
-      font-family: Inter, system-ui, sans-serif;
+      margin: 0;
+      background: #060816;
+      color: white;
+      font-family: system-ui, sans-serif;
+      overflow-x: hidden;
     }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(75px);
-      opacity: .5;
-      animation: float 9s ease-in-out infinite alternate;
+
+    #space {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
       pointer-events: none;
     }
-    .orb:nth-child(2) {
-      animation-delay: -4s;
+
+    .ambient {
+      position: fixed;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      filter: blur(110px);
+      opacity: .27;
+      z-index: -1;
+      pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
     }
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(#ffffff08 1px, transparent 1px),
-        linear-gradient(90deg, #ffffff08 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: linear-gradient(
-        to bottom, transparent, black 30%,
-        black 75%, transparent
-      );
+
+    .ambient.one {
+      background: #7c3aed;
+      top: -150px;
+      left: -100px;
     }
+
+    .ambient.two {
+      background: #06b6d4;
+      right: -150px;
+      bottom: -150px;
+      animation-delay: -5s;
+    }
+
+    @keyframes drift {
+      to { transform: translate(90px, 70px) scale(1.2); }
+    }
+
     .gradient-text {
       background: linear-gradient(
-        110deg, #fff, #a5b4fc, #67e8f9, #fff
+        90deg, #fff, #a78bfa, #22d3ee, #fff
       );
-      background-size: 250% auto;
-      background-clip: text;
+      background-size: 300%;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
-      animation: shine 5s linear infinite;
+      animation: shine 6s linear infinite;
     }
-    .glass {
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(14px);
-    }
-    .fade-up {
-      animation: fadeUp .9s both;
-    }
-    .glow-btn {
-      background: linear-gradient(
-        120deg, #6366f1, #8b5cf6, #06b6d4
-      );
-      background-size: 200% 200%;
-      animation: shine 5s linear infinite;
-      box-shadow: 0 8px 30px #6366f155;
-      transition: transform .2s, box-shadow .2s;
-    }
-    .glow-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px #6366f188;
-    }
-    @keyframes float {
-      from { transform: translate(-25px,-20px) scale(.9); }
-      to { transform: translate(35px,30px) scale(1.2); }
-    }
+
     @keyframes shine {
-      to { background-position: 200% center; }
+      to { background-position: 300% center; }
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(25px); }
+
+    .float {
+      animation: floating 4s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      50% { transform: translateY(-16px); }
+    }
+
+    .glass {
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.13);
+      backdrop-filter: blur(16px);
+    }
+
+    .neon-btn {
+      background: linear-gradient(120deg,#6366f1,#9333ea,#0891b2);
+      background-size: 200%;
+      box-shadow: 0 0 30px #7c3aed66;
+      transition: .25s;
+      animation: shine 5s linear infinite;
+    }
+
+    .neon-btn:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 0 50px #8b5cf6aa;
+    }
+
+    .ring-orbit {
+      position: absolute;
+      border: 1px solid #a78bfa55;
+      border-radius: 50%;
+      animation: spin 15s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .fade-in {
+      animation: fadeIn .9s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    #game {
+      position: relative;
+      height: 370px;
+      overflow: hidden;
+      cursor: crosshair;
+      touch-action: manipulation;
+      background:
+        radial-gradient(circle at 50% 50%,#1e1b4b,#090b20 75%);
+    }
+
+    .target {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+      animation: pop .25s ease-out, pulse 1s infinite alternate;
+      filter: drop-shadow(0 0 12px currentColor);
+      transition: transform .1s;
+    }
+
+    .target:hover { transform: scale(1.15); }
+
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.1); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      to { filter: drop-shadow(0 0 24px currentColor); }
+    }
+
+    .score-popup {
+      position: absolute;
+      pointer-events: none;
+      font-weight: 900;
+      font-size: 20px;
+      animation: scoreRise .7s forwards;
+    }
+
+    @keyframes scoreRise {
+      to { transform: translateY(-65px); opacity: 0; }
+    }
+
+    .shake {
+      animation: shake .25s linear;
+    }
+
+    @keyframes shake {
+      25% { transform: translateX(-7px); }
+      75% { transform: translateX(7px); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
       }
     }
   </style>
 </head>
 
-<body class="min-h-screen overflow-x-hidden text-white">
-  <main class="relative flex min-h-screen
-               items-center justify-center overflow-hidden">
+<body>
+  <canvas id="space"></canvas>
+  <div class="ambient one"></div>
+  <div class="ambient two"></div>
 
-    <!-- Animated background -->
-    <div class="orb w-80 h-80 bg-indigo-600
-                -top-24 left-[10%]"></div>
-    <div class="orb w-96 h-96 bg-cyan-600
-                -bottom-32 right-[5%]"></div>
-    <div class="grid-bg"></div>
+  <!-- Navigation -->
+  <nav class="max-w-6xl mx-auto px-6 py-6
+              flex justify-between items-center">
+    <div class="text-xl font-black tracking-wider">
+      <span class="text-cyan-400">✦</span> NEON<span
+        class="text-violet-400">VERSE</span>
+    </div>
+    <button onclick="toggleSound()" id="soundBtn"
+      class="glass rounded-xl px-4 py-2 text-sm">
+      🔇 Sound Off
+    </button>
+  </nav>
 
-    <!-- Hero content -->
-    <section class="relative z-10 px-6 py-16
-                    text-center max-w-3xl mx-auto">
+  <!-- Hero -->
+  <section class="relative min-h-[540px] flex
+                  items-center justify-center text-center
+                  px-5 py-16 overflow-hidden">
 
-      <div class="glass fade-up inline-flex
-                  items-center gap-3 rounded-full
-                  px-5 py-2 text-sm mb-8">
-        <span class="w-2 h-2 rounded-full
-                     bg-emerald-400 animate-pulse"></span>
-        WELCOME TO THE FUTURE ✦
+    <div class="ring-orbit w-72 h-72 sm:w-96 sm:h-96
+                opacity-40"></div>
+    <div class="ring-orbit w-56 h-56 sm:w-72 sm:h-72
+                opacity-30"
+         style="animation-direction:reverse;
+                animation-duration:10s"></div>
+
+    <div class="relative z-10">
+      <div class="fade-in glass inline-flex items-center
+                  rounded-full px-5 py-2 text-xs
+                  tracking-widest text-cyan-200 mb-8">
+        <span class="mr-2 w-2 h-2 bg-green-400
+                     rounded-full animate-pulse"></span>
+        INTERACTIVE EXPERIENCE 2026
       </div>
 
-      <h1 class="fade-up text-6xl sm:text-8xl
-                 font-black tracking-tight leading-tight"
-          style="animation-delay:.1s">
-        Hello,<br>
-        <span class="gradient-text">World!</span>
-        <span class="text-cyan-400 animate-pulse">_</span>
-      </h1>
+      <div class="float">
+        <h1 class="gradient-text text-6xl sm:text-8xl
+                   md:text-9xl font-black tracking-tight">
+          HELLO<br>WORLD!
+        </h1>
+      </div>
 
-      <p class="fade-up mt-7 text-slate-300
-                text-base sm:text-lg leading-relaxed"
-         style="animation-delay:.25s">
-        Your next big idea starts here.<br>
-        Crafted with HTML, Tailwind CSS & a little magic.
+      <p class="fade-in text-slate-300 mt-8
+                max-w-xl mx-auto leading-8"
+         style="animation-delay:.2s">
+        Welcome to the next dimension.<br>
+        Explore stunning animations and play a mini game.
       </p>
 
-      <div class="fade-up flex flex-wrap justify-center
-                  gap-4 mt-10"
-           style="animation-delay:.35s">
-
-        <button onclick="explore()"
-                class="glow-btn px-8 py-4 rounded-xl
-                       font-semibold">
-          Explore the magic ✨
-        </button>
-
-        <button onclick="showCode()"
-                class="glass px-8 py-4 rounded-xl
-                       font-semibold hover:bg-white/10
-                       transition">
-          View code &lt;/&gt;
+      <div class="fade-in flex flex-wrap justify-center
+                  gap-4 mt-9"
+           style="animation-delay:.4s">
+        <a href="#arcade"
+           class="neon-btn px-8 py-4 rounded-2xl
+                  font-bold">
+          🎮 Play Game
+        </a>
+        <button onclick="burst()"
+          class="glass px-8 py-4 rounded-2xl
+                 font-bold hover:bg-white/10 transition">
+          ✨ Magic Effect
         </button>
       </div>
+    </div>
+  </section>
 
-      <p id="message" aria-live="polite"
-         class="mt-6 text-cyan-300 font-medium
-                min-h-6"></p>
-
-      <div class="fade-up flex flex-wrap
-                  justify-center gap-3 mt-12
-                  text-sm text-slate-300"
-           style="animation-delay:.5s">
-        <span class="glass px-4 py-2 rounded-lg">✦ HTML5</span>
-        <span class="glass px-4 py-2 rounded-lg">✦ Tailwind CSS</span>
-        <span class="glass px-4 py-2 rounded-lg">✦ JavaScript</span>
+  <!-- Feature Cards -->
+  <section class="max-w-5xl mx-auto px-5 py-12">
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="glass rounded-3xl p-7
+                  hover:-translate-y-2 transition">
+        <div class="text-4xl mb-4">🌌</div>
+        <h3 class="font-bold text-xl mb-2">Living Universe</h3>
+        <p class="text-slate-400 text-sm leading-7">
+          Interactive particles and animated space background.
+        </p>
       </div>
-    </section>
-  </main>
+
+      <div class="glass rounded-3xl p-7
+                  hover:-translate-y-2 transition">
+        <div class="text-4xl mb-4">⚡</div>
+        <h3 class="font-bold text-xl mb-2">Neon Motion</h3>
+        <p class="text-slate-400 text-sm leading-7">
+          Gradient typography, glowing buttons and orbit effects.
+        </p>
+      </div>
+
+      <div class="glass rounded-3xl p-7
+                  hover:-translate-y-2 transition">
+        <div class="text-4xl mb-4">🏆</div>
+        <h3 class="font-bold text-xl mb-2">Arcade Challenge</h3>
+        <p class="text-slate-400 text-sm leading-7">
+          Catch stars, avoid bombs and beat your high score.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Arcade -->
+  <section id="arcade" class="max-w-5xl mx-auto
+                              px-5 py-16">
+    <div class="text-center mb-9">
+      <div class="text-cyan-400 text-sm
+                  tracking-[.3em] mb-3">
+        THE ARCADE
+      </div>
+      <h2 class="text-4xl sm:text-5xl font-black
+                 gradient-text">
+        CATCH THE STARS
+      </h2>
+      <p class="text-slate-400 mt-4">
+        เก็บดาวให้ได้มากที่สุดภายใน 30 วินาที
+        และหลบระเบิด!
+      </p>
+    </div>
+
+    <div class="glass rounded-3xl p-4 sm:p-6">
+      <div class="grid grid-cols-4 gap-2 sm:gap-4 mb-5">
+        <div class="glass rounded-2xl p-3 text-center">
+          <div class="text-xs text-slate-400">SCORE</div>
+          <div id="score" class="text-2xl font-black
+                                text-cyan-300">0</div>
+        </div>
+        <div class="glass rounded-2xl p-3 text-center">
+          <div class="text-xs text-slate-400">TIME</div>
+          <div id="time" class="text-2xl font-black">30</div>
+        </div>
+        <div class="glass rounded-2xl p-3 text-center">
+          <div class="text-xs text-slate-400">COMBO</div>
+          <div id="combo" class="text-2xl font-black
+                                text-violet-300">0</div>
+        </div>
+        <div class="glass rounded-2xl p-3 text-center">
+          <div class="text-xs text-slate-400">BEST</div>
+          <div id="best" class="text-2xl font-black
+                               text-yellow-300">0</div>
+        </div>
+      </div>
+
+      <div id="game" class="rounded-2xl border
+                           border-violet-500/30">
+        <div id="gameOverlay"
+             class="absolute inset-0 z-10 flex
+                    flex-col items-center justify-center
+                    bg-slate-950/60 text-center p-5">
+          <div id="overlayIcon" class="text-7xl mb-5">🎮</div>
+          <h3 id="overlayTitle"
+              class="text-3xl font-black mb-3">
+            READY PLAYER ONE?
+          </h3>
+          <p id="overlayText"
+             class="text-slate-300 mb-7">
+            ⭐ +10 คะแนน | 💎 +25 คะแนน | 💣 -15 คะแนน
+          </p>
+          <button id="startBtn" onclick="startGame()"
+                  class="neon-btn rounded-2xl px-9 py-4
+                         font-bold text-lg">
+            START GAME 🚀
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center
+                  justify-between gap-3 mt-5">
+        <p class="text-sm text-slate-400">
+          ⭐ Star +10 &nbsp; 💎 Diamond +25
+          &nbsp; 💣 Bomb -15
+        </p>
+        <button onclick="resetGame()"
+          class="glass px-5 py-2 rounded-xl text-sm
+                 hover:bg-white/10 transition">
+          ↻ Reset
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center text-slate-500 text-sm
+                 py-10 border-t border-white/10">
+    ✦ NEONVERSE — Built with HTML, Tailwind CSS & JavaScript
+  </footer>
 
   <script>
-    function explore() {
-      const message = document.getElementById("message");
-      message.textContent = "🚀 Your creative journey has begun!";
-      message.animate(
-        [
-          { opacity: 0, transform: "translateY(10px)" },
-          { opacity: 1, transform: "translateY(0)" }
-        ],
-        { duration: 500, fill: "both" }
-      );
+    // ===== Background particles =====
+    const canvas = document.getElementById("space");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let mouse = { x: -1000, y: -1000 };
+
+    function resizeCanvas() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+      particles = Array.from({length: Math.min(
+        130, Math.floor(innerWidth / 9)
+      )}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - .5) * .5,
+        vy: (Math.random() - .5) * .5,
+        r: Math.random() * 1.8 + .4
+      }));
     }
 
-    function showCode() {
-      document.getElementById("message").textContent =
-        "✨ Built with HTML, Tailwind CSS and JavaScript!";
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("pointermove", e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener("pointerleave", () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    function animateSpace() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const p of particles) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < 110 && dist > 0) {
+          p.x += dx / dist * 1.4;
+          p.y += dy / dist * 1.4;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(165,200,255,.7)";
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animateSpace);
     }
+
+    resizeCanvas();
+    animateSpace();
+
+    // ===== Sound effects =====
+    let soundOn = false;
+    let audioCtx;
+
+    function toggleSound() {
+      soundOn = !soundOn;
+      document.getElementById("soundBtn").textContent =
+        soundOn ? "🔊 Sound On" : "🔇 Sound Off";
+    }
+
+    function beep(freq = 600, duration = .1) {
+      if (!soundOn) return;
+
+      const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+
+      if (!audioCtx) audioCtx = new AudioContextClass();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        .001, audioCtx.currentTime + duration
+      );
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    // ===== Game state =====
+    const game = document.getElementById("game");
+    const overlay = document.getElementById("gameOverlay");
+
+    let score = 0;
+    let time = 30;
+    let combo = 0;
+    let best = 0;
+    let running = false;
+    let timerId = null;
+    let spawnId = null;
+
+    try {
+      best = Number(localStorage.getItem("neonBest")) || 0;
+    } catch (e) {}
+
+    function updateUI() {
+      document.getElementById("score").textContent = score;
+      document.getElementById("time").textContent = time;
+      document.getElementById("combo").textContent = combo;
+      document.getElementById("best").textContent = best;
+    }
+
+    function clearTargets() {
+      game.querySelectorAll(".target,.score-popup")
+        .forEach(el => el.remove());
+    }
+
+    function startGame() {
+      clearInterval(timerId);
+      clearInterval(spawnId);
+      clearTargets();
+
+      score = 0;
+      time = 30;
+      combo = 0;
+      running = true;
+      overlay.classList.add("hidden");
+      updateUI();
+
+      spawnTarget();
+      spawnId = setInterval(spawnTarget, 500);
+
+      timerId = setInterval(() => {
+        time--;
+        updateUI();
+        if (time <= 0) endGame();
+      }, 1000);
+    }
+
+    function spawnTarget() {
+      if (!running) return;
+
+      const random = Math.random();
+      const type = random < .15 ? "bomb"
+                 : random < .32 ? "diamond" : "star";
+
+      const size = type === "bomb" ? 43 : 48;
+      const rect = game.getBoundingClientRect();
+
+      const x = Math.random() * Math.max(0, rect.width - size);
+      const y = Math.random() * Math.max(0, rect.height - size);
+
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "target";
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.fontSize = "32px";
+
+      el.textContent =
+        type === "bomb" ? "💣" :
+        type === "diamond" ? "💎" : "⭐";
+
+      el.setAttribute("aria-label", type);
+
+      let removed = false;
+      const expiry = setTimeout(() => {
+        if (!removed) {
+          removed = true;
+          el.remove();
+        }
+      }, 1300);
+
+      el.addEventListener("click", () => {
+        if (!running || removed) return;
+        removed = true;
+        clearTimeout(expiry);
+
+        let points;
+
+        if (type === "bomb") {
+          points = -15;
+          combo = 0;
+          beep(160, .25);
+          game.classList.remove("shake");
+          void game.offsetWidth;
+          game.classList.add("shake");
+        } else {
+          combo++;
+          const multiplier = Math.min(
+            3, 1 + Math.floor(combo / 5) * .5
+          );
+          points = Math.round(
+            (type === "diamond" ? 25 : 10) * multiplier
+          );
+          beep(type === "diamond" ? 900 : 650, .12);
+        }
+
+        score = Math.max(0, score + points);
+        showPoints(x, y, points);
+        el.remove();
+        updateUI();
+      });
+
+      game.appendChild(el);
+    }
+
+    function showPoints(x, y, points) {
+      const popup = document.createElement("div");
+      popup.className = "score-popup";
+      popup.style.left = x + "px";
+      popup.style.top = y + "px";
+      popup.style.color = points >= 0 ? "#67e8f9" : "#fb7185";
+      popup.textContent = points > 0 ? "+" + points : points;
+      game.appendChild(popup);
+      setTimeout(() => popup.remove(), 750);
+    }
+
+    function endGame() {
+      running = false;
+      clearInterval(timerId);
+      clearInterval(spawnId);
+      clearTargets();
+
+      if (score > best) {
+        best = score;
+        try {
+          localStorage.setItem("neonBest", String(best));
+        } catch (e) {}
+      }
+
+      updateUI();
+
+      document.getElementById("overlayIcon").textContent = "🏆";
+      document.getElementById("overlayTitle").textContent =
+        "GAME OVER!";
+      document.getElementById("overlayText").textContent =
+        `Your score: ${score} | Best: ${best}`;
+      document.getElementById("startBtn").textContent =
+        "PLAY AGAIN 🚀";
+
+      overlay.classList.remove("hidden");
+    }
+
+    function resetGame() {
+      running = false;
+      clearInterval(timerId);
+      clearInterval(spawnId);
+      clearTargets();
+
+      score = 0;
+      time = 30;
+      combo = 0;
+      updateUI();
+
+      document.getElementById("overlayIcon").textContent = "🎮";
+      document.getElementById("overlayTitle").textContent =
+        "READY PLAYER ONE?";
+      document.getElementById("overlayText").textContent =
+        "เก็บดาวและเพชรให้ได้มากที่สุด หลีกเลี่ยงระเบิด!";
+      document.getElementById("startBtn").textContent =
+        "START GAME 🚀";
+
+      overlay.classList.remove("hidden");
+    }
+
+    // ===== Magic effect =====
+    function burst() {
+      const emojis = ["✨","⭐","💜","💎","🌟","🚀"];
+
+      for (let i = 0; i < 35; i++) {
+        const el = document.createElement("span");
+        el.textContent = emojis[Math.floor(
+          Math.random() * emojis.length
+        )];
+
+        Object.assign(el.style, {
+          position: "fixed",
+          left: "50%",
+          top: "45%",
+          fontSize: (15 + Math.random() * 22) + "px",
+          pointerEvents: "none",
+          zIndex: "9999"
+        });
+
+        document.body.appendChild(el);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 350;
+
+        el.animate([
+          { transform: "translate(-50%,-50%) scale(.3)",
+            opacity: 1 },
+          { transform: `translate(
+              calc(-50% + ${Math.cos(angle)*distance}px),
+              calc(-50% + ${Math.sin(angle)*distance}px)
+            ) rotate(540deg) scale(1.4)`,
+            opacity: 0 }
+        ], {
+          duration: 1100 + Math.random() * 800,
+          easing: "ease-out",
+          fill: "forwards"
+        }).onfinish = () => el.remove();
+      }
+
+      beep(880, .2);
+    }
+
+    updateUI();
   </script>
 </body>
 </html>
