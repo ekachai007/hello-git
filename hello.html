@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World | Animated Landing Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #080b1a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(75px);
+      opacity: .5;
+      animation: float 9s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .orb:nth-child(2) {
+      animation-delay: -4s;
+    }
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(#ffffff08 1px, transparent 1px),
+        linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(
+        to bottom, transparent, black 30%,
+        black 75%, transparent
+      );
+    }
+    .gradient-text {
+      background: linear-gradient(
+        110deg, #fff, #a5b4fc, #67e8f9, #fff
+      );
+      background-size: 250% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: shine 5s linear infinite;
+    }
+    .glass {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(14px);
+    }
+    .fade-up {
+      animation: fadeUp .9s both;
+    }
+    .glow-btn {
+      background: linear-gradient(
+        120deg, #6366f1, #8b5cf6, #06b6d4
+      );
+      background-size: 200% 200%;
+      animation: shine 5s linear infinite;
+      box-shadow: 0 8px 30px #6366f155;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .glow-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px #6366f188;
+    }
+    @keyframes float {
+      from { transform: translate(-25px,-20px) scale(.9); }
+      to { transform: translate(35px,30px) scale(1.2); }
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen overflow-x-hidden text-white">
+  <main class="relative flex min-h-screen
+               items-center justify-center overflow-hidden">
+
+    <!-- Animated background -->
+    <div class="orb w-80 h-80 bg-indigo-600
+                -top-24 left-[10%]"></div>
+    <div class="orb w-96 h-96 bg-cyan-600
+                -bottom-32 right-[5%]"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Hero content -->
+    <section class="relative z-10 px-6 py-16
+                    text-center max-w-3xl mx-auto">
+
+      <div class="glass fade-up inline-flex
+                  items-center gap-3 rounded-full
+                  px-5 py-2 text-sm mb-8">
+        <span class="w-2 h-2 rounded-full
+                     bg-emerald-400 animate-pulse"></span>
+        WELCOME TO THE FUTURE ✦
+      </div>
+
+      <h1 class="fade-up text-6xl sm:text-8xl
+                 font-black tracking-tight leading-tight"
+          style="animation-delay:.1s">
+        Hello,<br>
+        <span class="gradient-text">World!</span>
+        <span class="text-cyan-400 animate-pulse">_</span>
+      </h1>
+
+      <p class="fade-up mt-7 text-slate-300
+                text-base sm:text-lg leading-relaxed"
+         style="animation-delay:.25s">
+        Your next big idea starts here.<br>
+        Crafted with HTML, Tailwind CSS & a little magic.
+      </p>
+
+      <div class="fade-up flex flex-wrap justify-center
+                  gap-4 mt-10"
+           style="animation-delay:.35s">
+
+        <button onclick="explore()"
+                class="glow-btn px-8 py-4 rounded-xl
+                       font-semibold">
+          Explore the magic ✨
+        </button>
+
+        <button onclick="showCode()"
+                class="glass px-8 py-4 rounded-xl
+                       font-semibold hover:bg-white/10
+                       transition">
+          View code &lt;/&gt;
+        </button>
+      </div>
+
+      <p id="message" aria-live="polite"
+         class="mt-6 text-cyan-300 font-medium
+                min-h-6"></p>
+
+      <div class="fade-up flex flex-wrap
+                  justify-center gap-3 mt-12
+                  text-sm text-slate-300"
+           style="animation-delay:.5s">
+        <span class="glass px-4 py-2 rounded-lg">✦ HTML5</span>
+        <span class="glass px-4 py-2 rounded-lg">✦ Tailwind CSS</span>
+        <span class="glass px-4 py-2 rounded-lg">✦ JavaScript</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function explore() {
+      const message = document.getElementById("message");
+      message.textContent = "🚀 Your creative journey has begun!";
+      message.animate(
+        [
+          { opacity: 0, transform: "translateY(10px)" },
+          { opacity: 1, transform: "translateY(0)" }
+        ],
+        { duration: 500, fill: "both" }
+      );
+    }
+
+    function showCode() {
+      document.getElementById("message").textContent =
+        "✨ Built with HTML, Tailwind CSS and JavaScript!";
+    }
+  </script>
+</body>
+</html>
